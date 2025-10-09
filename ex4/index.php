@@ -1,5 +1,5 @@
 <?php
-$musica = $_POST['musica'];
+$musica = $_GET['musica'];
 if ($musica == "rock") {
     echo "T'agrada el Rock! 🤘";
 } elseif ($musica == "pop") {
