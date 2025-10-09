@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulari de contacte</title>
+</head>
+<body>
+    <form action="./index.php" method="POST">
+        <label for="idNom">Nom:</label>
+        <input type="text" name="nom" id="idNom" required>
+        <br><br>
+        <label for="idCog">Cognoms:</label>
+        <input type="text" name="cognoms" id="idCog" required>
+        <br><br>
+        <label for="idEmail">Email:</label>
+        <input type="email" name="email" id="idEmail" required>
+        <br><br>
+        <label for="idMiss">Missatge de contacte:</label>
+        <textarea id="idMiss" name="missatge" required></textarea>
+        <br><br>
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>
