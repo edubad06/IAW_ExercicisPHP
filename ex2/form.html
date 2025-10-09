@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Conversió EUR a USD</title>
+</head>
+<body>
+    <h1>Conversió EUR a USD</h1>
+    <form action="./index.php" method="GET">
+        <label for="quantitat">Introdueix la quantitat:</label>
+        <input type="number" step="0.01" name="quantitat" id="idQuant" required>
+        <br><br>
+        <label for="moneda">Selecciona el tipus de Conversió:</label>
+        <select name="moneda" id="idMoneda" required>
+            <option value="eur-usd">Euros -> Dòlars</option>
+            <option value="usd-eur">Dòlars -> Euros</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Convertir">
+    </form>
+</body>
+</html>
