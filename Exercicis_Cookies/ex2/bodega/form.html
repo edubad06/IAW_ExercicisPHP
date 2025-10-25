@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Botiga</title>
+</head>
+<body>
+    <h2>Bodega</h2>
+    <form action="./bodega.php" method="GET">
+        <label>Ets major d'edat?</label>
+        <br>
+        <label for="si">Sí</label>
+        <input type="radio" name="majoredat" id="si" value="si">
+        <label for="no">No</label>
+        <input type="radio" name="majoredat" id="no" value="no">
+        <br><br>
+        <label for="idioma">Escolliu l'idioma que vols:</label>
+        <select name="idioma" id="idIdioma">
+            <option value="ca">Català</option>
+            <option value="es">Espanyol</option>
+            <option value="en">Anglès</option>
+        </select>
+        <br><br>
+        <label for="moneda">Escolliu la moneda que vols:</label>
+        <select name="moneda" id="idMoneda">
+            <option value="eur">Euros</option>
+            <option value="gbp">Lliures</option>
+            <option value="usd">Dòlars</option>
+        </select>
+        <br><br>
+        <input type="submit" value="Entrar">
+    </form>
+</body>
+</html>
