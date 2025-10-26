@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Botiga</title>
+</head>
+<body>
+    <h2>Botiga</h2>
+    <form action="./cistella_compra.php" method="GET">
+        <h3>Poma (0,50 € / unitat):</h3>
+        <label for="quantPoma">Quantitat:</label>
+        <input type="number" name="poma" id="quantPoma" value="0">
+        <br><br>
+        <h3>Taronja (0,80 € / unitat):</h3>
+        <label for="quantTaronja">Quantitat:</label>
+        <input type="number" name="taronja" id="quantTaronja" value="0">
+        <br><br>
+        <input type="submit" value="Afegir a la cistella">
+    </form>
+    <br>
+    <a href="resum.php">Finalitzar compra</a>
+</body>
+</html>
