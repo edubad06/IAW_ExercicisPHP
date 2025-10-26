@@ -2,15 +2,18 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>Login Ampliació</title>
 </head>
 <body>
     <h2>Inicia sessió</h2>
-    <form action="./login_ampl.php" method="GET">
-        <label for="idDesc">Introdueix el codi de descompte:</label>
-        <input type="text" name="desc" id="idDesc">
+    <form action="./login_ampl.php" method="POST">
+        <label for="idUsuari">Usuari:</label>
+        <input type="text" name="usuari" id="idUsuari" required>
         <br><br>
-        <input type="submit" value="Comprar">
+        <label for="idPwd">Contrasenya:</label>
+        <input type="password" name="pwd" id="idPwd" required>
+        <br><br>
+        <input type="submit" value="Accedir">
     </form>
 </body>
 </html>
