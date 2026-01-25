@@ -1,13 +1,17 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) { session_start(); }
+// Iniciar la sessió si no s'ha iniciat prèviament
+if (session_status() == PHP_SESSION_NONE) { 
+    session_start(); 
+}
 
+// Comprovar si l'usuari està loguejat i recuperem el seu nom i rol
 $logado = isset($_SESSION['usuari']);
 $nom_usuari = $logado ? $_SESSION['usuari']['nom_usuari'] : 'Convidat';
 $rol = $logado ? $_SESSION['usuari']['nom_rol'] : '';
 
-// Control d'accés
+// Comprova si la pàgina actual és privada i redirigeix al login si no hi ha sessió
 $pagina_actual = basename($_SERVER['PHP_SELF']);
-$paginas_publiques = ['index.html', 'login.php', 'registro.php', 'error.php'];
+$paginas_publiques = ['index.html', 'login.php', 'register.php', 'error.php'];
 
 if (!$logado && !in_array($pagina_actual, $paginas_publiques)) {
     header("Location: login.php");
@@ -22,6 +26,10 @@ if (!$logado && !in_array($pagina_actual, $paginas_publiques)) {
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background-color: #f4f7f6; color: #333; }
         nav { background: #1a1a1a; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        
+        .logo-link { color: white; text-decoration: none; font-size: 1.5rem; transition: 0.3s; }
+        .logo-link:hover { color: #00d4ff; }
+        
         nav a { color: #00d4ff; text-decoration: none; margin-left: 20px; font-weight: 500; }
         nav a:hover { color: #fff; }
         
@@ -37,13 +45,9 @@ if (!$logado && !in_array($pagina_actual, $paginas_publiques)) {
         table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; table-layout: auto; }
         th, td { padding: 12px 15px; border: 1px solid #eee; text-align: left; }
         th { background: #f8f9fa; font-weight: bold; }
+        tbody tr:hover { background-color: #f1f1f1; }
         
-        .acciones {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            justify-content: flex-start;
-        }
+        .acciones { display: flex; gap: 10px; align-items: center; justify-content: flex-start; }
 
         .btn { 
             padding: 8px 12px; 
@@ -76,21 +80,24 @@ if (!$logado && !in_array($pagina_actual, $paginas_publiques)) {
 </head>
 <body>
 <nav>
-    <div style="font-size: 1.5rem;">🎬 <strong>CineManager</strong></div>
+    <a href="index.html" class="logo-link">🎬 <strong>CineManager</strong></a>
+    
     <div>
-        <a href="index.html">Inici</a>
         <?php if ($logado): ?>
-            <a href="stats.php">Cercador</a>
-            <?php if ($rol === 'Usuari'): ?>
-                <a href="seguiment_read.php">La meva Llista</a>
-            <?php else: ?>
-                <a href="pelicules_read.php">Gestió Catàleg</a>
+            <a href="access.php">Dashboard</a>
+            <a href="movie_search.php">Cercador</a>
+            <a href="cataleg.php">Catàleg</a>
+            <a href="seguiment_read.php">La meva llista</a>
+            
+            <?php if ($rol === 'Moderador'): ?>
+                <a href="pelicules_read.php">Administració</a>
             <?php endif; ?>
-            <span style="margin-left:20px; color:#aaa;">| <?php echo htmlspecialchars($nom_usuari); ?></span>
+
+            <span style="margin-left:20px; color:#aaa;">| <?php echo htmlspecialchars($nom_usuari); ?> (<?php echo $rol; ?>)</span>
             <a href="logout.php" style="color: #ff4d4d;">Sortir</a>
         <?php else: ?>
             <a href="login.php">Login</a>
-            <a href="registro.php">Registre</a>
+            <a href="register.php">Registre</a>
         <?php endif; ?>
     </div>
 </nav>

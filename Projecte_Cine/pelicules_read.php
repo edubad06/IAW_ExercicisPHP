@@ -1,10 +1,10 @@
 <?php
 require_once 'header.php';
-require_once 'config/conexion.php';
+require_once 'config/db_connect.php';
 
 // Control d'accés
 if (!$logado || $rol !== 'Moderador') { 
-    header("Location: error.php?msg=Accés no autoritzat."); 
+    header("Location: error.php?tipus=sessio_error"); 
     exit(); 
 }
 
@@ -17,31 +17,32 @@ $sql_stats = "SELECT
 $res_stats = mysqli_query($conexion, $sql_stats);
 
 if (!$res_stats) {
-    header("Location: error.php?msg=Error al carregar les estadístiques del catàleg.");
+    header("Location: error.php?tipus=desconegut");
     exit();
 }
 $stats = mysqli_fetch_assoc($res_stats);
 
 // Lògica d'ordenació
+// Recollim els paràmetres de la URL i validem les columnes per evitar injeccions
 $ordre = $_GET['ordre'] ?? 'titol';
 $dir = $_GET['dir'] ?? 'ASC';
 
 $columnes_valides = ['titol', 'genere', 'any_estrena', 'puntuacio'];
 if (!in_array($ordre, $columnes_valides)) { $ordre = 'titol'; }
 
-// Consulta principal
+// Consulta per obtenir el catàleg complet aplicant l'ordenació triada per l'usuari
 $sql = "SELECT * FROM pelicules ORDER BY $ordre $dir";
 $res = mysqli_query($conexion, $sql);
 
 if (!$res) {
-    header("Location: error.php?msg=Error al carregar el catàleg de pel·lícules.");
+    header("Location: error.php?tipus=desconegut");
     exit();
 }
 ?>
 
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-        <h2>🎥 Gestió del Catàleg de Pel·lícules</h2>
+        <h2>🎥 Gestió del Catàleg de la Comunitat</h2>
         <a href="pelicules_create.php" class="btn btn-add">➕ Nova Pel·lícula</a>
     </div>
 

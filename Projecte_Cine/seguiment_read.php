@@ -1,10 +1,10 @@
 <?php
 require_once 'header.php';
-require_once 'config/conexion.php';
+require_once 'config/db_connect.php';
 
 // Control d'accés
-if (!$logado || $rol !== 'Usuari') { 
-    header("Location: login.php"); 
+if (!$logado) { 
+    header("Location: error.php?tipus=sessio_error"); 
     exit(); 
 }
 
@@ -23,11 +23,10 @@ if ($filtre !== 'tots') {
     $sql .= " AND s.estat = '$filtre_safe'"; 
 }
 
-// Gestió d'error en la consulta
 $res = mysqli_query($conexion, $sql);
 
 if (!$res) {
-    header("Location: error.php?msg=Error al carregar la teva llista personal.");
+    header("Location: error.php?tipus=desconegut");
     exit();
 }
 ?>
@@ -35,11 +34,12 @@ if (!$res) {
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h2>🍿 La meva Llista de Seguiment</h2>
-        <a href="stats.php" class="btn btn-add">🔍 Buscar més pel·lícules</a>
+        <a href="movie_search.php" class="btn btn-add">🔍 Buscar més pel·lícules</a>
     </div>
     
-    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <form method="GET" style="display: flex; align-items: center; gap: 10px;">
+    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        
+        <form method="GET" style="display: flex; align-items: center; gap: 10px; margin-bottom: 0;">
             <span>Filtrar per estat:</span>
             <select name="estat" onchange="this.form.submit()" style="width: auto; margin-bottom: 0;">
                 <option value="tots" <?php if($filtre=='tots') echo 'selected'; ?>>Totes les pelis</option>
@@ -47,6 +47,15 @@ if (!$res) {
                 <option value="Vista" <?php if($filtre=='Vista') echo 'selected'; ?>>Vistes</option>
             </select>
         </form>
+
+        <div style="display: flex; gap: 10px;">
+            <a href="export_csv.php" class="btn" style="background: #28a745; color: white; height: auto; padding: 8px 15px; font-weight: bold; font-size: 0.9rem; text-decoration: none; border-radius: 4px;">
+                Exportar a CSV
+            </a>
+            <a href="export_pdf.php" class="btn" style="background: #dc3545; color: white; height: auto; padding: 8px 15px; font-weight: bold; font-size: 0.9rem; text-decoration: none; border-radius: 4px;">
+                Exportar a PDF
+            </a>
+        </div>
     </div>
 
     <table>
@@ -89,10 +98,19 @@ if (!$res) {
                 <tr>
                     <td colspan="5" style="text-align:center; padding: 40px; color: #777;">
                         No tens cap pel·lícula en aquesta secció. <br>
-                        <a href="stats.php" style="color: #007bff;">Comença a buscar ara!</a>
+                        <a href="movie_search.php" style="color: #007bff;">Comença a buscar ara!</a>
                     </td>
                 </tr>
             <?php endif; ?>
         </tbody>
     </table>
 </div>
+
+<?php 
+if (isset($_GET['msg']) && $_GET['msg'] === 'afegida') {
+    echo "<script>alert('Pel·lícula afegida correctament a la teva llista!');</script>";
+}
+if (isset($_GET['msg']) && $_GET['msg'] === 'eliminat') {
+    echo "<script>alert('Registre eliminat de la teva llista.');</script>";
+}
+?>

@@ -1,24 +1,30 @@
 <?php
 require_once 'header.php';
-require_once 'config/conexion.php';
+require_once 'config/db_connect.php';
 
 // Control d'accés
 if (!$logado || $rol !== 'Moderador') { 
-    header("Location: error.php?msg=Accés denegat: Només els administradors poden editar dades."); 
+    header("Location: error.php?tipus=sessio_error"); 
     exit(); 
 }
 
 // Verificar ID vàlid
 if (!isset($_GET['id']) || empty($_GET['id'])) {
-    header("Location: error.php?msg=No s'ha especificat cap ID de pel·lícula per editar.");
+    header("Location: error.php?tipus=peticio_invalid");
     exit();
 }
 
 $id = (int)$_GET['id'];
-$error = "";
 
 // Processar el formulari
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validació camps buits
+    if (empty($_POST['titol']) || empty($_POST['genere'])) {
+        header("Location: error.php?tipus=buit");
+        exit();
+    }
+
+    // Neteja i recollida de dades
     $titol = mysqli_real_escape_string($conexion, $_POST['titol']);
     $genere = mysqli_real_escape_string($conexion, $_POST['genere']);
     $director = mysqli_real_escape_string($conexion, $_POST['director']);
@@ -26,6 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $puntuacio = (float)$_POST['puntuacio'];
     $sinopsi = mysqli_real_escape_string($conexion, $_POST['sinopsi']);
 
+    // Validació formats de dades i puntuació
+    if ($any < 1888 || $any > date("Y") + 10) {
+        header("Location: error.php?tipus=data_incorrecta");
+        exit();
+    }
+    if ($puntuacio < 0 || $puntuacio > 10) {
+        header("Location: error.php?tipus=num_invalid");
+        exit();
+    }
+
+    // Actualitzar BBDD
     $sql_update = "UPDATE pelicules SET 
                     titol = '$titol', 
                     genere = '$genere', 
@@ -39,15 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: pelicules_read.php?msg=updated");
         exit();
     } else {
-        header("Location: error.php?msg=Error fatal a la base de dades en actualitzar.");
+        header("Location: error.php?tipus=desconegut");
         exit();
     }
 }
 
-// Obtenir dades de la pel·lícula
+// Obtenir dades de la pel·lícula per omplir el formulari
 $res = mysqli_query($conexion, "SELECT * FROM pelicules WHERE id_pelicula = $id");
 if (!$res || mysqli_num_rows($res) === 0) {
-    header("Location: error.php?msg=La pel·lícula amb ID $id no s'ha trobat al sistema.");
+    header("Location: error.php?tipus=peticio_invalid");
     exit();
 }
 $peli = mysqli_fetch_assoc($res);
@@ -58,10 +75,10 @@ $peli = mysqli_fetch_assoc($res);
     
     <form method="POST">
         <label>Títol:</label>
-        <input type="text" name="titol" value="<?php echo htmlspecialchars($peli['titol']); ?>" required>
+        <input type="text" name="titol" value="<?php echo htmlspecialchars($peli['titol']); ?>">
         
         <label>Gènere:</label>
-        <select name="genere" required>
+        <select name="genere">
             <option value="Acció" <?php if($peli['genere'] == 'Acció') echo 'selected'; ?>>Acció</option>
             <option value="Drama" <?php if($peli['genere'] == 'Drama') echo 'selected'; ?>>Drama</option>
             <option value="Comèdia" <?php if($peli['genere'] == 'Comèdia') echo 'selected'; ?>>Comèdia</option>

@@ -1,14 +1,22 @@
 <?php
 require_once 'header.php';
-require_once 'config/conexion.php';
+require_once 'config/db_connect.php';
 
-// Control d'accés
+// Només el Moderador pot accedir
 if (!$logado || $rol !== 'Moderador') { 
-    header("Location: error.php?msg=Accés denegat."); 
+    header("Location: error.php?tipus=sessio_error"); 
     exit(); 
 }
 
+// Processar dades del formulari
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validar camps buits
+    if (empty($_POST['titol']) || empty($_POST['genere'])) {
+        header("Location: error.php?tipus=buit");
+        exit();
+    }
+
+    // Neteja de dades per seguretat
     $titol = mysqli_real_escape_string($conexion, $_POST['titol']);
     $genere = mysqli_real_escape_string($conexion, $_POST['genere']);
     $director = mysqli_real_escape_string($conexion, $_POST['director']);
@@ -16,15 +24,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $puntuacio = (float)$_POST['puntuacio'];
     $sinopsi = mysqli_real_escape_string($conexion, $_POST['sinopsi']);
 
-    // Comprovar dades duplicades
-    $checkDuplicate = mysqli_query($conexion, "SELECT id_pelicula FROM pelicules WHERE titol = '$titol'");
-    
-    if (mysqli_num_rows($checkDuplicate) > 0) {
-        header("Location: error.php?msg=Aquesta pel·lícula '$titol' ja existeix al catàleg.");
+    // Validar formats d'any i puntuació
+    if ($any < 1888 || $any > date("Y") + 10) {
+        header("Location: error.php?tipus=data_incorrecta");
+        exit();
+    }
+    if ($puntuacio < 0 || $puntuacio > 10) {
+        header("Location: error.php?tipus=num_invalid");
         exit();
     }
 
-    // Si no existeix, fem el insert
+    // Validar duplicat de títol
+    $checkDuplicate = mysqli_query($conexion, "SELECT id_pelicula FROM pelicules WHERE titol = '$titol'");
+    
+    if (mysqli_num_rows($checkDuplicate) > 0) {
+        header("Location: error.php?tipus=peli_duplicada");
+        exit();
+    }
+
+    // Si tot és correcte, fem el insert
     $sql = "INSERT INTO pelicules (titol, genere, director, any_estrena, puntuacio, sinopsi) 
             VALUES ('$titol', '$genere', '$director', $any, $puntuacio, '$sinopsi')";
     
@@ -32,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header("Location: pelicules_read.php?msg=creada");
         exit();
     } else {
-        header("Location: error.php?msg=S'ha produït un error en guardar la pel·lícula.");
+        header("Location: error.php?tipus=desconegut");
         exit();
     }
 }
@@ -42,10 +60,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h2>➕ Afegir Nova Pel·lícula</h2>
     <form method="POST">
         <label>Títol:</label>
-        <input type="text" name="titol" required placeholder="Ex: One Piece">
+        <input type="text" name="titol" placeholder="Ex: One Piece">
         
         <label>Gènere:</label>
-        <select name="genere" required>
+        <select name="genere">
+            <option value="">-- Selecciona un gènere --</option>
             <option value="Acció">Acció</option>
             <option value="Drama">Drama</option>
             <option value="Comèdia">Comèdia</option>
@@ -57,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="director">
 
         <label>Any d'estrena:</label>
-        <input type="number" name="any">
+        <input type="number" name="any" placeholder="Ex: 2024">
 
         <label>Puntuació:</label>
         <input type="number" name="puntuacio" step="0.1" min="0" max="10" value="5.0">

@@ -51,15 +51,26 @@ INSERT INTO usuaris (id_rol, email, password_hash, nom_usuari) VALUES
 (2, 'admin@cine.com', '$2a$12$hlANQwmPtY.0L3rBc71LKesYUFDEwhlvoMoFjAFOrLSORH5gVvhwa', 'Administrador');
 
 INSERT INTO pelicules (titol, genere, director, any_estrena, puntuacio, sinopsi) VALUES 
-('Inception', 'Ciència Ficció', 'Christopher Nolan', 2010, 8.8, 'Un lladre que roba secrets a través de la tecnologia compartida dels somnis.'),
-('The Godfather', 'Drama', 'Francis Ford Coppola', 1972, 9.2, 'L''envellit patriarca d''una dinastia del crim organitzat transfereix el control del seu imperi clandestí al seu fill.'),
-('Pulp Fiction', 'Acció', 'Quentin Tarantino', 1994, 8.9, 'Les vides de dos assassins a sou, un boxejador, la dona d''un gàngster i un parell de bandolers s''entrellacen.'),
-('The Matrix', 'Ciència Ficció', 'Lana Wachowski', 1999, 8.7, 'Un pirata informàtic aprèn d''uns rebels misteriosos sobre la naturalesa real de la seva realitat.'),
-('Parasite', 'Drama', 'Bong Joon-ho', 2019, 8.6, 'La cobdícia i la discriminació de classe amenacen la relació entre la riquesa i la pobresa.'),
-('The Dark Knight', 'Acció', 'Christopher Nolan', 2008, 9.0, 'Quan l''amenaça coneguda com el Joker sembra el caos a Gotham.');
+('Inception', 'Ciència Ficció', 'Christopher Nolan', 2010, 8.8, 'Un lladre que roba secrets a través dels somnis.'),
+('The Godfather', 'Drama', 'Francis Ford Coppola', 1972, 9.2, 'El control d''un imperi clandestí.'),
+('Pulp Fiction', 'Acció', 'Quentin Tarantino', 1994, 8.9, 'Vides creuades de gàngsters.'),
+('The Matrix', 'Ciència Ficció', 'Lana Wachowski', 1999, 8.7, 'La naturalesa real de la realitat.'),
+('Parasite', 'Drama', 'Bong Joon-ho', 2019, 8.6, 'Discriminació de classe i cobdícia.'),
+('The Dark Knight', 'Acció', 'Christopher Nolan', 2008, 9.0, 'El Joker sembra el caos a Gotham.'),
+('Interstellar', 'Ciència Ficció', 'Christopher Nolan', 2014, 8.7, 'Viatge espacial a través d''un forat de cuc.'),
+('The Shawshank Redemption', 'Drama', 'Frank Darabont', 1994, 9.3, 'Dos homes empresonats troben consol en la redempció.'),
+('Schindler''s List', 'Històrica', 'Steven Spielberg', 1993, 9.0, 'Un empresari salva jueus durant l''Holocaust.'),
+('Spirited Away', 'Animació', 'Hayao Miyazaki', 2001, 8.6, 'Una nena s''endinsa en un món d''esperits.'),
+('The Silence of the Lambs', 'Thriller', 'Jonathan Demme', 1991, 8.6, 'Una agent del FBI busca l''ajuda d''un assassí caníbal.');
 
 INSERT INTO seguiment (id_usuari, id_pelicula, estat, comentari_personal) VALUES 
 (2, 1, 'Vista', 'Increïble, l''he vista 3 vegades.'),
 (2, 2, 'Pendent', 'La tinc pendent des de fa anys.'),
 (1, 3, 'Vista', 'Molt bona banda sonora.'),
-(2, 5, 'Vista', 'Final inesperat.');
+(2, 5, 'Vista', 'Final inesperat.'),
+(1, 4, 'Pendent', 'M''han dit que és un clàssic.'),
+(1, 6, 'Vista', 'La millor de Batman.'),
+(2, 7, 'Vista', 'Molt visual, m''ha encantat.'),
+(1, 10, 'Vista', 'Màgica i visualment preciosa.'),
+(2, 8, 'Pendent', 'Recomanada per un amic.'),
+(1, 9, 'Vista', 'Molt dura però necessària.');
